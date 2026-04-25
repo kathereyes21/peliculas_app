@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:peliculas_app/providers/movies_provider.dart';
-import 'package:peliculas_app/widgets/card_swiper.dart';
-import 'package:peliculas_app/widgets/movie_slider.dart';
-import 'package:peliculas_app/models/models.dart';
 import 'package:provider/provider.dart';
+import 'package:peliculas_app/providers/movies_provider.dart';
+import 'package:peliculas_app/widgets/widgets.dart';
+import 'package:peliculas_app/search/movie_search_delegate.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,21 +10,30 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final moviesProvider = Provider.of<MoviesProvider>(context);
-    print((moviesProvider.onDisplayMovies));
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Peliculas en Cartelera'),
-        elevation: 0,
+        title: const Text('Películas en Cines',
+            style: TextStyle(color: Colors.white)),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search_outlined)),
-        ],
+         IconButton(
+           icon: const Icon(Icons.search, color: Colors.white),
+            onPressed: () => showSearch(
+            context: context,
+            delegate: MovieSearchDelegate(),
+    ),
+  ),
+],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             CardSwiper(movies: moviesProvider.onDisplayMovies),
-            //listado de peliculas horizontal
-            MovieSlider(),
+            MovieSlider(
+              movies: moviesProvider.popularMovies,
+              title: 'Populares',
+              onNextPage: () => moviesProvider.getPopularMovies(),
+            ),
           ],
         ),
       ),
